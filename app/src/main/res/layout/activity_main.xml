@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    tools:context="com.zouyingjun.samonkey.boxui.Ui.MainActivity">
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:onClick="onClick"
+        android:layout_marginTop="35dp"
+        android:src="@drawable/ic_home"/>
+    <com.zouyingjun.samonkey.boxui.view.NavigateMenu
+        android:layout_width="wrap_content"
+        android:id="@+id/nm"
+        android:layout_marginTop="85dp"
+        android:visibility="gone"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"></com.zouyingjun.samonkey.boxui.view.NavigateMenu>
+
+    <ImageView
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_labe"
+        android:layout_marginTop="44dp"
+        android:id="@+id/imageView"
+        android:onClick="onClick1"
+        android:layout_marginStart="103dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="10dp"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:orientation="vertical">
+    <View
+        android:layout_width="20dp"
+        android:layout_height="95dp" />
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@drawable/ic_line_2"
+        android:id="@+id/imageView4"/>
+</LinearLayout>
+
+    <ImageView
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_gesture"
+        android:id="@+id/imageView3"
+        android:layout_marginEnd="103dp"
+        android:onClick="onClick2"
+        android:layout_marginTop="54dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"/>
+</RelativeLayout>
