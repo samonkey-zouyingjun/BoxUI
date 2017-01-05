@@ -1,63 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg"
-    tools:context="com.zouyingjun.samonkey.boxui.Ui.MainActivity">
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg"
+        android:orientation="horizontal"
+        tools:context="com.zouyingjun.samonkey.boxui.Ui.MainActivity">
+
+        <FrameLayout
+            android:id="@+id/fl_gestrue_right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="34dp"
+                android:onClick="onClick1"
+                android:src="@drawable/ic_labe" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_gesture_center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="95dp" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="20dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_line_2" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_gestrue_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="42dp"
+                android:onClick="onClick2"
+                android:src="@drawable/ic_gesture" />
+
+        </FrameLayout>
+    </LinearLayout>
+
     <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginLeft="20dp"
-        android:onClick="onClick"
         android:layout_marginTop="35dp"
-        android:src="@drawable/ic_home"/>
+        android:onClick="onClick"
+        android:src="@drawable/ic_home" />
+
     <com.zouyingjun.samonkey.boxui.view.NavigateMenu
-        android:layout_width="wrap_content"
         android:id="@+id/nm"
-        android:layout_marginTop="85dp"
-        android:visibility="gone"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"></com.zouyingjun.samonkey.boxui.view.NavigateMenu>
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="85dp"
+        android:visibility="gone"></com.zouyingjun.samonkey.boxui.view.NavigateMenu>
 
-    <ImageView
-        android:layout_width="160dp"
+    <TextView
+        android:id="@+id/tv_main_status"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_labe"
-        android:layout_marginTop="44dp"
-        android:id="@+id/imageView"
-        android:onClick="onClick1"
-        android:layout_marginStart="103dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="10dp"
-    android:layout_alignParentBottom="true"
-    android:layout_centerHorizontal="true"
-    android:orientation="vertical">
-    <View
-        android:layout_width="20dp"
-        android:layout_height="95dp" />
-    <ImageView
-        android:layout_width="20dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:src="@drawable/ic_line_2"
-        android:id="@+id/imageView4"/>
-</LinearLayout>
-
-    <ImageView
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_gesture"
-        android:id="@+id/imageView3"
-        android:layout_marginEnd="103dp"
-        android:onClick="onClick2"
-        android:layout_marginTop="54dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"/>
-</RelativeLayout>
+        android:layout_gravity="right"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="25dp"
+        android:text="已连接"
+        android:textColor="#FFF"
+        android:textSize="12sp" />
+</FrameLayout>
