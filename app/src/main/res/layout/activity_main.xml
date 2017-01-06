@@ -12,7 +12,7 @@
         tools:context="com.zouyingjun.samonkey.boxui.Ui.MainActivity">
 
         <FrameLayout
-            android:id="@+id/fl_gestrue_right"
+            android:id="@+id/fl_gestrue_left"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
@@ -25,7 +25,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="34dp"
-                android:onClick="onClick1"
                 android:src="@drawable/ic_labe" />
         </FrameLayout>
 
@@ -51,11 +50,18 @@
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/fl_gestrue_left"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:id="@+id/fl_gestrue_right1"
             android:layout_weight="1">
-
+            <FrameLayout
+                android:id="@+id/fl_gestrue_right"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <FrameLayout
+                android:id="@+id/fl_gestrue_right2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
             <ImageView
                 android:id="@+id/imageView3"
                 android:layout_width="160dp"
@@ -92,7 +98,7 @@
         android:layout_gravity="right"
         android:layout_marginRight="10dp"
         android:layout_marginTop="25dp"
-        android:text="已连接"
+        android:text="未连接"
         android:textColor="#FFF"
         android:textSize="12sp" />
 </FrameLayout>
