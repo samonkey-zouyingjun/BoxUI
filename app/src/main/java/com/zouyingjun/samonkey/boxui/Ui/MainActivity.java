@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zouyingjun.samonkey.boxui.R;
 import com.zouyingjun.samonkey.boxui.dialog.Mydialog;
@@ -25,7 +24,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends BaseActivity {
     //ui
     private NavigateMenu nm;
-    private FrameLayout fmRightScroll,fmRightFlick,fmRightView,fmLeft;
+    private FrameLayout fmRightScroll, fmRightFlick, fmRightView, fmLeft;
     private LinearLayout llCenter;
     private TextView tvStatus;
     //广播
@@ -33,12 +32,16 @@ public class MainActivity extends BaseActivity {
     private UDPSendClient client;
     private String SERVER_IP = "255.255.255.255";
     ExecutorService cachedThreadPool;
-
+    //模式
     private final int GESTURE_MODE_SCROLL = 0;
     private final int GESTURE_MODE_FLICK = 4;
     private final int GESTURE_MODE_DOUBLE = 1;
     private final int GESTURE_MODE_CURSOR = 2;
     private int GESTURE_MODE = -1;
+    //发送频率
+    private long mLastMillis;
+    private int mDistanceX;
+    private int mDistanceY;
 
     @Override
     protected void myOnCreate(Bundle arg0) {
@@ -75,7 +78,7 @@ public class MainActivity extends BaseActivity {
                 cachedThreadPool.execute(new Runnable() {
                     @Override
                     public void run() {
-                        client.sendMessage(""+3003);
+                        client.sendMessage("" + 3003);
                     }
                 });
             }
@@ -108,16 +111,19 @@ public class MainActivity extends BaseActivity {
                 cachedThreadPool.execute(new Runnable() {
                     @Override
                     public void run() {
-                        client.sendMessage(4001+","+ Utils.getWifiIp(MainActivity.this));
+                        client.sendMessage(4001 + "," + Utils.getWifiIp(MainActivity.this));
                     }
                 });
             }
         });
     }
-    int widthPixels,heightPixels;
+
+    int widthPixels, heightPixels;
+
     @Override
     protected void initData() {
         super.initData();
+        //获取屏幕宽高
         WindowManager windowManager = MainActivity.this.getWindowManager();
         DisplayMetrics dm = new DisplayMetrics();
         windowManager.getDefaultDisplay().getMetrics(dm);
@@ -125,32 +131,40 @@ public class MainActivity extends BaseActivity {
         heightPixels = dm.heightPixels;
     }
 
-    private static final String TAG = "MainActivity";
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cachedThreadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                client.sendMessage(4001 + "," + Utils.getWifiIp(MainActivity.this));
+            }
+        });
+    }
+
     /**
      * 发送端
      * 光标 3002 x,y滑动（int） 3001 点击
      * 视频 x,y（int）
      * 游戏 3020 x,y (float) 0~1
-     *
-     * */
+     */
     @Override
     protected void initEvent() {
         super.initEvent();
         final GestureDetector mGestureRight = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                final int x = (int)e.getX();
-                final int y = (int)e.getY();
-                if(GESTURE_MODE == GESTURE_MODE_DOUBLE){
-
-                    Log.d("TAG", "onSingleTapConfirmed: " + 3030+","+3001 + "," + x + "," + y);
+                final int x = (int) e.getX();
+                final int y = (int) e.getY();
+                if (GESTURE_MODE == GESTURE_MODE_DOUBLE) {
+                    Log.d("TAG", "onSingleTapConfirmed: " + 3030 + "," + 3001 + "," + x + "," + y);
                     cachedThreadPool.execute(new Runnable() {
                         @Override
                         public void run() {
-                            client.sendMessage(3030+","+3001 + "," + x + "," + y);
+                            client.sendMessage(3030 + "," + 3001 + "," + x + "," + y);
                         }
                     });
-                }else {
+                } else {
                     cachedThreadPool.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -163,40 +177,46 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, final float distanceX, final float distanceY) {
-               /* final long time = System.currentTimeMillis();
-                if(time - t > 15){
-                    cachedThreadPool.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            t = System.currentTimeMillis();
-                            Log.d("time", time+"====="+t);
-                            client.sendMessage(3002+","+-a+","+-b);
-                            a = 0;
-                            b = 0;
-                        }
-                    });
-                }else{
-                    a += (int)distanceX;
-                    b += (int)distanceY;
+                //回调时间点
+                final long time = System.currentTimeMillis();
+
+                if(mDistanceX == 0&& mDistanceY == 0){
+                    mDistanceX =(int) distanceX;
+                    mDistanceY =(int) distanceY;
+
+                }
+                if (time - mLastMillis > 10) {
+                    //记录时间点
+                    mLastMillis = System.currentTimeMillis();
+                    /**线程安全*/
+                    final int x = mDistanceX;
+                    final int y = mDistanceY;
+
+                    if (GESTURE_MODE == GESTURE_MODE_DOUBLE) {
+//                        Log.e(TAG, "onScroll: "+ 3030+","+3002 + "," + -(int) distanceX + "," + -(int) distanceY);
+                        cachedThreadPool.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                client.sendMessage(3030 + "," + 3002 + "," + -x + "," + -y);
+                            }
+                        });
+                    } else {
+                        cachedThreadPool.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                client.sendMessage(3002 + "," + -x + "," + -y);
+                            }
+                        });
+                    }
+                    //发送结束
+                    mDistanceX = 0;
+                    mDistanceY = 0;
+                } else {
+                    mDistanceX += (int) distanceX;
+                    mDistanceY += (int) distanceY;
                 }
 
-                Log.e("TAG", "onScroll: "+3002+","+-(int)distanceX+","+-(int)distanceY);*/
-                if(GESTURE_MODE == GESTURE_MODE_DOUBLE){
-                    Log.e(TAG, "onScroll: "+ 3030+","+3002 + "," + -(int) distanceX + "," + -(int) distanceY);
-                    cachedThreadPool.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            client.sendMessage(3030+","+3002 + "," + -(int) distanceX + "," + -(int) distanceY);
-                        }
-                    });
-                }else {
-                    cachedThreadPool.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            client.sendMessage(3002 + "," + -(int) distanceX + "," + -(int) distanceY);
-                        }
-                    });
-                }
+
                 return super.onScroll(e1, e2, distanceX, distanceY);
             }
         });
@@ -207,12 +227,12 @@ public class MainActivity extends BaseActivity {
             public boolean onDown(MotionEvent e) {
                 final float x = e.getX();
                 final float y = e.getY();
-                Log.e("TAG", "onSingleTapConfirmed: "+3020+",0,"+x/widthPixels+","+y/heightPixels);
+                Log.e("TAG", "onSingleTapConfirmed: " + 3020 + ",0," + x / widthPixels + "," + y / heightPixels);
 
                 cachedThreadPool.execute(new Runnable() {
                     @Override
                     public void run() {
-                        client.sendMessage(3020+",0,"+x/widthPixels+","+y/heightPixels);
+                        client.sendMessage(3020 + ",0," + x / widthPixels + "," + y / heightPixels);
                     }
                 });
                 return super.onDown(e);
@@ -224,13 +244,12 @@ public class MainActivity extends BaseActivity {
                 final float x = e.getX();
                 final float y = e.getY();
 
-
-                Log.e("TAG", "onSingleTapConfirmed: "+3020+",1,"+x/widthPixels+","+y/heightPixels);
+                Log.e("TAG", "onSingleTapConfirmed: " + 3020 + ",1," + x / widthPixels + "," + y / heightPixels);
 
                 cachedThreadPool.execute(new Runnable() {
                     @Override
                     public void run() {
-                        client.sendMessage(3020+",1,"+x/widthPixels+","+y/heightPixels);
+                        client.sendMessage(3020 + ",1," + x / widthPixels + "," + y / heightPixels);
                     }
                 });
                 return super.onSingleTapConfirmed(e);
@@ -243,24 +262,44 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, final float distanceX, final float distanceY) {
+                //回调时间点
+                final long time = System.currentTimeMillis();
 
-                if(GESTURE_MODE == GESTURE_MODE_DOUBLE){
-                    Log.e(TAG, "onScroll: "+3031+","+-(int)distanceX+","+-(int)distanceY );
-                    cachedThreadPool.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            client.sendMessage(3031+","+-(int)distanceX+","+-(int)distanceY);
-                        }
-                    });
-                }else{
-                    cachedThreadPool.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            client.sendMessage(-(int)distanceX+","+-(int)distanceY);
-                        }
-                    });
+                if(mDistanceX == 0&& mDistanceY == 0){
+                    mDistanceX = (int) distanceX;
+                    mDistanceY = (int) distanceY;
                 }
 
+                if (time - mLastMillis > 10) {
+                    //记录时间点
+                    mLastMillis = System.currentTimeMillis();
+                    /**线程安全*/
+                    final int x = mDistanceX;
+                    final int y = mDistanceY;
+
+                    if (GESTURE_MODE == GESTURE_MODE_DOUBLE) {
+//                        Log.e(TAG, "onScroll: " + 3031 + "," + -x + "," + -y);
+                        cachedThreadPool.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                client.sendMessage(3031 + "," + -x + "," + -y);
+                            }
+                        });
+                    } else {
+                        cachedThreadPool.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                client.sendMessage(-x + "," + -y);
+                            }
+                        });
+                    }
+                    //发送结束
+                    mDistanceX = 0;
+                    mDistanceY = 0;
+                } else {
+                    mDistanceX += (int) distanceX;
+                    mDistanceY += (int) distanceY;
+                }
                 return super.onScroll(e1, e2, distanceX, distanceY);
             }
         });
@@ -297,9 +336,10 @@ public class MainActivity extends BaseActivity {
     }
 
     private void changeGestureMode(int gestureCode) {
-        if (mDialog != null){
+
+        if(mDialog!=null){
             mDialog.dismiss();
-            }
+        }
 
         if (gestureCode == GESTURE_MODE_SCROLL) {
             llCenter.setVisibility(View.GONE);
@@ -319,7 +359,7 @@ public class MainActivity extends BaseActivity {
             fmRightScroll.setVisibility(View.GONE);
             fmRightFlick.setVisibility(View.GONE);
             fmRightView.setVisibility(View.GONE);
-        } else if(gestureCode == GESTURE_MODE_FLICK){
+        } else if (gestureCode == GESTURE_MODE_FLICK) {
             llCenter.setVisibility(View.GONE);
             fmLeft.setVisibility(View.GONE);
             fmRightScroll.setVisibility(View.GONE);
@@ -327,13 +367,13 @@ public class MainActivity extends BaseActivity {
             fmRightView.setVisibility(View.VISIBLE);
         }
         GESTURE_MODE = gestureCode;
-        if(SERVER_IP.equals("255.255.255.255")&&mDialog != null){
+        if (SERVER_IP.equals("255.255.255.255") && mDialog != null) {
             cachedThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         Thread.sleep(500);
-                        if(SERVER_IP.equals("255.255.255.255")){
+                        if (SERVER_IP.equals("255.255.255.255")) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -382,7 +422,7 @@ public class MainActivity extends BaseActivity {
      * 3014
      */
     public void handlerReciever(final String data) {
-        Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
         String sub = data.split(",")[0];
         if (sub != null && sub.equals("4000")) {
             cachedThreadPool.execute(new Runnable() {
@@ -399,8 +439,10 @@ public class MainActivity extends BaseActivity {
             else if ("3012".equals(data)) changeGestureMode(GESTURE_MODE_SCROLL);
             else if ("3013".equals(data)) changeGestureMode(GESTURE_MODE_FLICK);
             else if ("3014".equals(data)) changeGestureMode(GESTURE_MODE_DOUBLE);
-            else if ("3100".equals(data)){tvStatus.setText("未连接");
-                this.mDialog.show(Mydialog.TEXT_BUTTON_DIALOG);}
+            else if ("3100".equals(data)) {
+                tvStatus.setText("未连接");
+                this.mDialog.show(Mydialog.TEXT_BUTTON_DIALOG);
+            }
         }
     }
 

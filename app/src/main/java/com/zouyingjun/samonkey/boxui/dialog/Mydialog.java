@@ -4,12 +4,10 @@ package com.zouyingjun.samonkey.boxui.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -178,10 +176,11 @@ public class Mydialog extends Dialog {
             llTextBtn.setVisibility(View.VISIBLE);
         }
         WindowManager.LayoutParams attributes = this.getWindow().getAttributes();
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        attributes.width = (int) (metrics.widthPixels * 0.9);
-        attributes.height = (int) (metrics.heightPixels * 0.9);
+//        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        attributes.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        attributes.width = ViewGroup.LayoutParams.WRAP_CONTENT;
         attributes.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        attributes.gravity = Gravity.CENTER;//设置dialog 在布局中的位置
         attributes.dimAmount = 0.5f;
         this.getWindow().setAttributes(attributes);
         show();
@@ -196,15 +195,6 @@ public class Mydialog extends Dialog {
     @Override
     public void show() {
 
-        Window window =  this.getWindow();
-        if (this != null && window != null) {
-            WindowManager.LayoutParams attr = window.getAttributes();
-            if (attr != null) {
-                attr.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                attr.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                attr.gravity = Gravity.CENTER;//设置dialog 在布局中的位置
-            }
-        }
         super.show();
     }
 
