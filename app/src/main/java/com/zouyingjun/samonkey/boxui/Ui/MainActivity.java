@@ -18,6 +18,7 @@ import com.zouyingjun.samonkey.boxui.dialog.Mydialog;
 import com.zouyingjun.samonkey.boxui.entity.UDPReciever;
 import com.zouyingjun.samonkey.boxui.entity.UDPSendClient;
 import com.zouyingjun.samonkey.boxui.entity.Utils;
+import com.zouyingjun.samonkey.boxui.view.MyDialog;
 import com.zouyingjun.samonkey.boxui.view.VerticalSeekBar;
 
 import java.util.concurrent.ExecutorService;
@@ -36,6 +37,7 @@ public class MainActivity extends BaseActivity {
     private UDPSendClient client;
     private String SERVER_IP = "255.255.255.255";
     ExecutorService cachedThreadPool;
+    private MyDialog myDialog;
     //模式
     private final int GESTURE_MODE_SCROLL = 0;
     private final int GESTURE_MODE_FLICK = 4;
@@ -115,6 +117,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        myDialog = new MyDialog(this);
         mDialog.show(Mydialog.TEXT_BUTTON_DIALOG);
         this.mDialog.setLeftOnclickListener(new Mydialog.onLeftOnclickListener() {
             @Override
@@ -125,6 +128,8 @@ public class MainActivity extends BaseActivity {
         this.mDialog.setRightOnclickListener(new Mydialog.onRightOnclickListener() {
             @Override
             public void onRightClick() {
+                mDialog.dismiss();
+                myDialog.show();
                 cachedThreadPool.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -365,7 +370,6 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
         }
-
     }
 
     private void changeGestureMode(int gestureCode) {
@@ -423,7 +427,7 @@ public class MainActivity extends BaseActivity {
         }
         GESTURE_MODE = gestureCode;
         if (SERVER_IP.equals("255.255.255.255") && mDialog != null) {
-            tvStatus.setText("未连接");
+            tvStatus.setText("未连接");SERVER_IP = "255.255.255.255";
             cachedThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -434,6 +438,13 @@ public class MainActivity extends BaseActivity {
                                 @Override
                                 public void run() {
                                     mDialog.show(Mydialog.TEXT_BUTTON_DIALOG);
+                                }
+                            });
+                        }else{
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    myDialog.dismiss();
                                 }
                             });
                         }
@@ -498,7 +509,7 @@ public class MainActivity extends BaseActivity {
             else if ("3013".equals(data)) changeGestureMode(GESTURE_MODE_FLICK);
             else if ("3014".equals(data)) changeGestureMode(GESTURE_MODE_DOUBLE);
             else if ("3100".equals(data)) {
-                tvStatus.setText("未连接");
+                tvStatus.setText("未连接");SERVER_IP = "255.255.255.255";
                 this.mDialog.show(Mydialog.TEXT_BUTTON_DIALOG);
             }
         }
