@@ -83,7 +83,7 @@
                     android:textSize="16sp"
                     android:id="@+id/bt_dialog_left"
                     android:paddingLeft="8dp"
-                    android:background="@drawable/shape_button1" />
+                    android:background="@drawable/shape_btn_dialog" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
                     android:paddingRight="8dp"
                     android:id="@+id/bt_dialog_right"
                     android:paddingLeft="8dp"
-                    android:background="@drawable/shape_button1" />
+                    android:background="@drawable/shape_btn_dialog" />
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>

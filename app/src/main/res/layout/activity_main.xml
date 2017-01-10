@@ -16,15 +16,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
-
-
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="34dp"
+                android:layout_marginTop="56dp"
                 android:src="@drawable/ic_labe" />
         </FrameLayout>
 
@@ -57,9 +55,73 @@
             <FrameLayout
                 android:id="@+id/fl_gestrue_right"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="60dp"
+                    android:visibility="gone"
+                    android:layout_gravity="right|center"
+                    android:id="@+id/ll_scroll_volmue"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginBottom="50dp"
+                    android:orientation="vertical">
+                <com.zouyingjun.samonkey.boxui.view.VerticalSeekBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:minHeight="5dp"
+                    android:maxHeight="5dp"
+                    android:thumbOffset="5dp"
+                    android:id="@+id/vs_scroll_volmue"
+                    android:max="100"
+                    android:progressDrawable="@drawable/seekbar_style"
+                    android:thumb="@drawable/circle_vol"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/volmue"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="5dp"
+                    android:visibility="gone"
+                    android:paddingBottom="5dp"
+                    android:id="@+id/ll_scroll_vidoe"
+                    android:paddingRight="10dp"
+                    android:background="#991c242a"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00:00"
+                        android:id="@+id/tv_scroll_vidoe1"
+                        android:layout_marginLeft="10dp"/>
+                    <SeekBar
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="5dp"
+                        android:maxHeight="5dp"
+                        android:thumbOffset="5dp"
+                        android:layout_gravity="center_vertical"
+                        android:id="@+id/sb_scroll_vidoe"
+                        android:progressDrawable="@drawable/seekbar_style"
+                        android:thumb="@drawable/lignt_down"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00:00"
+                        android:id="@+id/tv_scroll_vidoe2"
+                        android:layout_marginRight="10dp"/>
+                </LinearLayout>
+            </FrameLayout>
             <FrameLayout
                 android:id="@+id/fl_gestrue_right2"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
             <ImageView
@@ -68,27 +130,101 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="42dp"
+                android:layout_marginTop="66dp"
                 android:src="@drawable/ic_gesture" />
-
         </FrameLayout>
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="35dp"
-        android:onClick="onClick"
-        android:src="@drawable/ic_home" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="42dp"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:text="返回"
+            android:gravity="center"
+            android:textSize="10sp"
+            android:onClick="onClick"
+            android:id="@+id/bt_back"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/btn_bg"
+            android:textColor="@drawable/btn_color"/>
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:text="上一个"
+            android:gravity="center"
+            android:visibility="gone"
+            android:onClick="onClick"
+            android:textSize="10sp"
+            android:id="@+id/bt_pre"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/btn_bg"
+            android:textColor="@drawable/btn_color"/>
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:text="暂停"
+            android:gravity="center"
+            android:textSize="10sp"
+            android:visibility="gone"
+            android:onClick="onClick"
+            android:id="@+id/bt_stop"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/btn_bg"
+            android:textColor="@drawable/btn_color"/>
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:text="下一个"
+            android:gravity="center"
+            android:textSize="10sp"
+            android:visibility="gone"
+            android:id="@+id/bt_next"
+            android:onClick="onClick"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/btn_bg"
+            android:textColor="@drawable/btn_color"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"></View>
 
-    <com.zouyingjun.samonkey.boxui.view.NavigateMenu
-        android:id="@+id/nm"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="85dp"
-        android:visibility="gone"></com.zouyingjun.samonkey.boxui.view.NavigateMenu>
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:text="引导"
+            android:gravity="center"
+            android:textSize="10sp"
+            android:id="@+id/bt_guide"
+            android:layout_marginLeft="5dp"
+            android:onClick="onClick"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/btn_bg"
+            android:textColor="@drawable/btn_color"/>
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:text="音量"
+            android:gravity="center"
+            android:textSize="10sp"
+            android:visibility="gone"
+            android:id="@+id/bt_volume"
+            android:onClick="onClick"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/btn_bg"
+            android:textColor="@drawable/btn_color"/>
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/tv_main_status"
@@ -96,7 +232,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:text="未连接"
         android:textColor="#FFF"
         android:textSize="12sp" />
