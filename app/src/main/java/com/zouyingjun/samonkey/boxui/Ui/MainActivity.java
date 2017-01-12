@@ -15,7 +15,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zouyingjun.samonkey.boxui.R;
 import com.zouyingjun.samonkey.boxui.adapter.GuideAdapter;
@@ -127,7 +126,7 @@ public class MainActivity extends BaseActivity {
             int current = 0;
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                current = progress;toastStr("当前值:" + progress);
+                current = progress;
             }
 
             @Override
@@ -161,7 +160,6 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onStopTrackingTouch(VerticalSeekBar VerticalSeekBar) {
-                toastStr("当前值:" + currentProgress);
                 cachedThreadPool.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -221,7 +219,7 @@ public class MainActivity extends BaseActivity {
                 RadioGroup.LayoutParams.WRAP_CONTENT,
                 RadioGroup.LayoutParams.WRAP_CONTENT
         );
-        params.setMargins(10, 0, 10, 0);
+        params.setMargins(8, 0, 8, 0);
         for(int i=0;i<4;i++){
             RadioButton rBtn=new RadioButton(this);
             rBtn.setButtonDrawable(R.drawable.selector_vp);
@@ -318,8 +316,8 @@ public class MainActivity extends BaseActivity {
                 final long time = System.currentTimeMillis();
 
                 if (mDistanceX == 0 && mDistanceY == 0) {
-                    mDistanceX = (int) Math.round(distanceX * 0.5);
-                    mDistanceY = (int) Math.round(distanceY * 0.5);
+                    mDistanceX = (int) Math.round(distanceX  * 0.6);
+                    mDistanceY = (int) Math.round(distanceY  * 0.6);
 
                 }
                 if (time - mLastMillis > 10) {
@@ -349,8 +347,8 @@ public class MainActivity extends BaseActivity {
                     mDistanceX = 0;
                     mDistanceY = 0;
                 } else {
-                    mDistanceX += (int) Math.round(distanceX * 0.5);
-                    mDistanceY += (int) Math.round(distanceY * 0.5);
+                    mDistanceX += (int) Math.round(distanceX  * 0.6);
+                    mDistanceY += (int) Math.round(distanceY  * 0.6);
                 }
 
 
@@ -403,8 +401,8 @@ public class MainActivity extends BaseActivity {
                 final long time = System.currentTimeMillis();
 
                 if (mDistanceX == 0 && mDistanceY == 0) {
-                    mDistanceX = (int) Math.round(distanceX * 0.5);
-                    mDistanceY = (int) Math.round(distanceY * 0.5);
+                    mDistanceX = (int) Math.round(distanceX  * 0.6);
+                    mDistanceY = (int) Math.round(distanceY  * 0.6);
                 }
 
                 if (time - mLastMillis > 10) {
@@ -434,8 +432,8 @@ public class MainActivity extends BaseActivity {
                     mDistanceX = 0;
                     mDistanceY = 0;
                 } else {
-                    mDistanceX += (int) Math.round(distanceX * 0.5);
-                    mDistanceY += (int) Math.round(distanceY * 0.5);
+                    mDistanceX += (int) Math.round(distanceX  * 0.6);
+                    mDistanceY += (int) Math.round(distanceY  * 0.6);
                 }
                 return super.onScroll(e1, e2, distanceX, distanceY);
             }
@@ -463,9 +461,8 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-
-
     public void onClick(View v) {
+
         int id = v.getId();
         switch (id) {
             case R.id.bt_back:
@@ -491,6 +488,7 @@ public class MainActivity extends BaseActivity {
                         client.sendMessage("" + 3060);
                     }
                 });
+
                 break;
             case R.id.bt_pre:
                 cachedThreadPool.execute(new Runnable() {
@@ -519,7 +517,9 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case R.id.tv_main_status:
-                changeGestureMode(GESTURE_MODE_SCROLL);
+                if (SERVER_IP.equals("255.255.255.255")) {
+                    mDialog.show(Mydialog.TEXT_BUTTON_DIALOG);
+                }
                 break;
         }
     }
@@ -640,16 +640,15 @@ public class MainActivity extends BaseActivity {
      * next 3062
      * pre 3061
      * pause 3060
-     * pro 3042
+     * progress current 3042
      * volume 3052
 
-     * progress 3040
-     * volem 3051(0.5 10)
-     * currnet 3041
+     * progress total 3040
+     * volume cunrrent 3051(0.5 10)
      */
 
     public void handlerReciever(final String data) {
-        Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
         String sub = data.split(",")[0];
         if (sub != null) {
             if (sub.equals("4000")) {
@@ -660,7 +659,7 @@ public class MainActivity extends BaseActivity {
                         client = new UDPSendClient(data.split(",")[1]);
                     }
                 });
-                Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
                 SERVER_IP = data.split(",")[1];
                 String volume = data.split(",")[2];
                 if(volume!=null) verticalSeekBar.setProgress((int)(Float.parseFloat(volume)*10));
@@ -678,7 +677,7 @@ public class MainActivity extends BaseActivity {
                 seekBar.setProgress(currentTime);
                 tvVideo1.setText(Utils.formateTime(currentTime));
         } else {
-                Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
             if ("3011".equals(data)) changeGestureMode(GESTURE_MODE_CURSOR);
             else if ("3012".equals(data)) changeGestureMode(GESTURE_MODE_SCROLL);
             else if ("3013".equals(data)) changeGestureMode(GESTURE_MODE_FLICK);
