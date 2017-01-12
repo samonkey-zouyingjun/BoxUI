@@ -23,7 +23,7 @@ import com.zouyingjun.samonkey.boxui.entity.UDPReciever;
 import com.zouyingjun.samonkey.boxui.entity.UDPSendClient;
 import com.zouyingjun.samonkey.boxui.entity.Utils;
 import com.zouyingjun.samonkey.boxui.view.MyDialog;
-import com.zouyingjun.samonkey.boxui.view.VerticalSeekBar;
+import com.zouyingjun.samonkey.boxui.view.VerticalSeekBar2;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,7 +33,7 @@ public class MainActivity extends BaseActivity {
     private FrameLayout fmRightScroll, fmRightFlick, fmRightView, fmLeft, fmVp;
     private LinearLayout llCenter, llVolmue, llVideo;
     private TextView tvStatus, tvVideo1, tvVideo2, tvVpTitle;
-    private VerticalSeekBar verticalSeekBar;
+    private VerticalSeekBar2 verticalSeekBar;
     private SeekBar seekBar;
     private Button btBack, btNext, btPre, btStop, btGuide, btVolume;
     private ViewPager mVp;
@@ -96,15 +96,15 @@ public class MainActivity extends BaseActivity {
         mVp = (ViewPager) findViewById(R.id.vp_main_guide);
         mAdapter = new GuideAdapter(this);
         mVp.setAdapter(mAdapter);
-
+        /**ViewPager*/
         mVp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if(positionOffset == 0){
+                if (positionOffset == 0) {
                     tvVpTitle.setVisibility(View.VISIBLE);
                     setVpTitle(position);
-                }else{
-                    if(tvVpTitle.getVisibility()==View.VISIBLE) {
+                } else {
+                    if (tvVpTitle.getVisibility() == View.VISIBLE) {
                         tvVpTitle.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.text_out));
                         tvVpTitle.setVisibility(View.GONE);
                     }
@@ -113,7 +113,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                ((RadioButton)rg
+                ((RadioButton) rg
                         .getChildAt(position))
                         .setChecked(true);
             }
@@ -122,8 +122,10 @@ public class MainActivity extends BaseActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+        /**seekBar*/
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int current = 0;
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 current = progress;
@@ -144,31 +146,24 @@ public class MainActivity extends BaseActivity {
                 });
             }
         });
-        verticalSeekBar = (VerticalSeekBar) findViewById(R.id.vs_scroll_volmue);
-        verticalSeekBar.setThumb(getResources().getDrawable(R.drawable.circle_vol));
-        verticalSeekBar.setOnSeekBarChangeListener(new VerticalSeekBar.OnSeekBarChangeListener() {
-            int currentProgress = 0;
+        verticalSeekBar = (VerticalSeekBar2) findViewById(R.id.vs_scroll_volmue);
+        verticalSeekBar.setUpListener(new VerticalSeekBar2.UpListener() {
             @Override
-            public void onProgressChanged(VerticalSeekBar VerticalSeekBar, int progress, boolean fromUser) {
-                currentProgress = progress;
-            }
+            public void seekBarUp(VerticalSeekBar2 seekBar, int i) {
 
-            @Override
-            public void onStartTrackingTouch(VerticalSeekBar VerticalSeekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(VerticalSeekBar VerticalSeekBar) {
+                if (i < 0) i = 0;
+                else if (i > 10) i = 10;
+                final int finalNum = i;
                 cachedThreadPool.execute(new Runnable() {
                     @Override
                     public void run() {
-                        client.sendMessage(3052 + "," + currentProgress/10f);
+                        client.sendMessage(3052 + "," + finalNum / 10f);
                     }
                 });
             }
         });
 
+        /**Dialog*/
         myDialog = new MyDialog(this);
         mDialog.show(Mydialog.TEXT_BUTTON_DIALOG);
         this.mDialog.setLeftOnclickListener(new Mydialog.onLeftOnclickListener() {
@@ -211,34 +206,17 @@ public class MainActivity extends BaseActivity {
                 });
             }
         });
-        setGuideIndicator();
-    }
-
-    public void setGuideIndicator(){
-        RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
-                RadioGroup.LayoutParams.WRAP_CONTENT,
-                RadioGroup.LayoutParams.WRAP_CONTENT
-        );
-        params.setMargins(8, 0, 8, 0);
-        for(int i=0;i<4;i++){
-            RadioButton rBtn=new RadioButton(this);
-            rBtn.setButtonDrawable(R.drawable.selector_vp);
-            rBtn.setLayoutParams(params);
-            rg.addView(rBtn);
-        }
+        /**RadioButton*/
+        ((RadioButton) rg.getChildAt(0)).setChecked(true);
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton rBtn=(RadioButton)
+                RadioButton rBtn = (RadioButton)
                         group.findViewById(checkedId);
-                int pos=
-                        rg.indexOfChild(rBtn);
+                int pos = rg.indexOfChild(rBtn);
                 mVp.setCurrentItem(pos);
             }
         });
-        ((RadioButton)rg
-                .getChildAt(0))
-                .setChecked(true);
     }
 
 
@@ -316,8 +294,8 @@ public class MainActivity extends BaseActivity {
                 final long time = System.currentTimeMillis();
 
                 if (mDistanceX == 0 && mDistanceY == 0) {
-                    mDistanceX = (int) Math.round(distanceX  * 0.6);
-                    mDistanceY = (int) Math.round(distanceY  * 0.6);
+                    mDistanceX = (int) Math.round(distanceX * 0.6);
+                    mDistanceY = (int) Math.round(distanceY * 0.6);
 
                 }
                 if (time - mLastMillis > 10) {
@@ -347,8 +325,8 @@ public class MainActivity extends BaseActivity {
                     mDistanceX = 0;
                     mDistanceY = 0;
                 } else {
-                    mDistanceX += (int) Math.round(distanceX  * 0.6);
-                    mDistanceY += (int) Math.round(distanceY  * 0.6);
+                    mDistanceX += (int) Math.round(distanceX * 0.6);
+                    mDistanceY += (int) Math.round(distanceY * 0.6);
                 }
 
 
@@ -401,8 +379,8 @@ public class MainActivity extends BaseActivity {
                 final long time = System.currentTimeMillis();
 
                 if (mDistanceX == 0 && mDistanceY == 0) {
-                    mDistanceX = (int) Math.round(distanceX  * 0.6);
-                    mDistanceY = (int) Math.round(distanceY  * 0.6);
+                    mDistanceX = (int) Math.round(distanceX * 0.6);
+                    mDistanceY = (int) Math.round(distanceY * 0.6);
                 }
 
                 if (time - mLastMillis > 10) {
@@ -432,8 +410,8 @@ public class MainActivity extends BaseActivity {
                     mDistanceX = 0;
                     mDistanceY = 0;
                 } else {
-                    mDistanceX += (int) Math.round(distanceX  * 0.6);
-                    mDistanceY += (int) Math.round(distanceY  * 0.6);
+                    mDistanceX += (int) Math.round(distanceX * 0.6);
+                    mDistanceY += (int) Math.round(distanceY * 0.6);
                 }
                 return super.onScroll(e1, e2, distanceX, distanceY);
             }
@@ -503,7 +481,7 @@ public class MainActivity extends BaseActivity {
                 if (fmVp.getVisibility() == View.VISIBLE) {
                     fmVp.setVisibility(View.GONE);
                 } else {
-                    mVp.setCurrentItem(0,false);
+                    mVp.setCurrentItem(0, false);
                     fmVp.setVisibility(View.VISIBLE);
                 }
                 break;
@@ -635,14 +613,13 @@ public class MainActivity extends BaseActivity {
      * 3012 手势—视频—滑动
      * 3013 手势-游戏-点击
      * 3014 宜居 双模式
-     *
-     *
+     * <p>
      * next 3062
      * pre 3061
      * pause 3060
      * progress current 3042
      * volume 3052
-
+     * <p>
      * progress total 3040
      * volume cunrrent 3051(0.5 10)
      */
@@ -662,40 +639,39 @@ public class MainActivity extends BaseActivity {
 //                Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
                 SERVER_IP = data.split(",")[1];
                 String volume = data.split(",")[2];
-                if(volume!=null) verticalSeekBar.setProgress((int)(Float.parseFloat(volume)*10));
+                if (volume != null)
+                    verticalSeekBar.setProgress((int) (Float.parseFloat(volume) * 10));
                 tvStatus.setText("已连接");
 //                Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
-            }else if (sub.equals("3051")) {
+            } else if (sub.equals("3051")) {
 //                Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
-                verticalSeekBar.setProgress((int) (Float.parseFloat(data.split(",")[1])*10));
-            }else if(sub.equals("3040")) {
+                verticalSeekBar.setProgress((int) (Float.parseFloat(data.split(",")[1]) * 10));
+            } else if (sub.equals("3040")) {
                 int postime = Integer.parseInt(data.split(",")[1]);
                 seekBar.setMax(postime);
                 tvVideo2.setText(Utils.formateTime(postime));
-            }else if(sub.equals("3041")){
+            } else if (sub.equals("3041")) {
                 int currentTime = Integer.parseInt(data.split(",")[1]);
                 seekBar.setProgress(currentTime);
                 tvVideo1.setText(Utils.formateTime(currentTime));
-        } else {
+            } else {
 //                Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
-            if ("3011".equals(data)) changeGestureMode(GESTURE_MODE_CURSOR);
-            else if ("3012".equals(data)) changeGestureMode(GESTURE_MODE_SCROLL);
-            else if ("3013".equals(data)) changeGestureMode(GESTURE_MODE_FLICK);
-            else if ("3014".equals(data)) changeGestureMode(GESTURE_MODE_DOUBLE);
-            else if ("3100".equals(data)) {
-                tvStatus.setText("未连接");
-                SERVER_IP = "255.255.255.255";
-                this.mDialog.show(Mydialog.TEXT_BUTTON_DIALOG);
+                if ("3011".equals(data)) changeGestureMode(GESTURE_MODE_CURSOR);
+                else if ("3012".equals(data)) changeGestureMode(GESTURE_MODE_SCROLL);
+                else if ("3013".equals(data)) changeGestureMode(GESTURE_MODE_FLICK);
+                else if ("3014".equals(data)) changeGestureMode(GESTURE_MODE_DOUBLE);
+                else if ("3100".equals(data)) {
+                    tvStatus.setText("未连接");
+                    SERVER_IP = "255.255.255.255";
+                    this.mDialog.show(Mydialog.TEXT_BUTTON_DIALOG);
+                }
             }
         }
     }
-}
-
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         reciever.setFlag(false);
     }
-
 }

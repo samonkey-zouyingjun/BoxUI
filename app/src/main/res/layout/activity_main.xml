@@ -70,7 +70,7 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-                    <com.zouyingjun.samonkey.boxui.view.VerticalSeekBar
+                    <com.zouyingjun.samonkey.boxui.view.VerticalSeekBar2
                         android:id="@+id/vs_scroll_volmue"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
@@ -78,6 +78,8 @@
                         android:max="10"
                         android:maxHeight="5dp"
                         android:minHeight="5dp"
+                        android:thumbOffset="5dp"
+                        android:thumb="@drawable/circle_vol"
                         android:progressDrawable="@drawable/seekbar_style" />
 
                     <ImageView
@@ -288,11 +290,36 @@
         <RadioGroup
             android:id="@+id/rg_main_indicatorId"
             android:layout_width="wrap_content"
-            android:layout_height="16dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal" />
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal" >
+            <RadioButton
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_margin="8dp"
+                android:button="@null"
+                android:background="@drawable/selector_vp"/>
+            <RadioButton
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_margin="8dp"
+                android:button="@null"
+                android:background="@drawable/selector_vp"/>
+            <RadioButton
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_margin="8dp"
+                android:button="@null"
+                android:background="@drawable/selector_vp"/>
+            <RadioButton
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:button="@null"
+                android:layout_margin="8dp"
+                android:background="@drawable/selector_vp"/>
+        </RadioGroup>
     </FrameLayout>
 </FrameLayout>

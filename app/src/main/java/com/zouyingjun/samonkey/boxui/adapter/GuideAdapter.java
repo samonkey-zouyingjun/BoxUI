@@ -2,6 +2,7 @@ package com.zouyingjun.samonkey.boxui.adapter;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.zouyingjun.samonkey.boxui.R;
  */
 
 public class GuideAdapter extends PagerAdapter {
+
+    private SparseArray<ImageView> sArray = new SparseArray<>();
 
     int[] imgs = {
             R.drawable.choose,R.drawable.fullview,
@@ -32,19 +35,24 @@ public class GuideAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == object;
+        return view == sArray.get((Integer)(object));
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((View) object);
+        container.removeView(sArray.get(position));
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        ImageView iv = (ImageView) LayoutInflater.from(context).inflate(R.layout.item_vp_guide,container,false);
-        iv.setImageResource(imgs[position]);
+        ImageView iv = sArray.get(position);
+        if(iv == null){
+            iv = (ImageView) LayoutInflater.from(context).inflate(R.layout.item_vp_guide,container,false);
+            iv.setImageResource(imgs[position]);
+            sArray.put(position,iv);
+        }
+
         container.addView(iv);
-        return iv;
+        return position;
     }
 }

@@ -1,8 +1,12 @@
 package com.zouyingjun.samonkey.boxui.entity;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+
+import static android.content.Context.CONNECTIVITY_SERVICE;
 
 /**
  * Created by Tony J on 2017/1/4.
@@ -52,6 +56,16 @@ public class Utils {
         if(s<=9) time += "0"+s;
         else time +=s;
         return time;
+    }
+
+    /**
+     * 判断是否接入WIFI
+     *
+     * */
+    public static boolean checkWifi(Context context){
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        return mWifi.isConnected();
     }
 
 
