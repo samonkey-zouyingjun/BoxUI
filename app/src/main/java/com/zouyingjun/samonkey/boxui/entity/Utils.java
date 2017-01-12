@@ -36,4 +36,23 @@ public class Utils {
         return (i & 0xFF) + "." + ((i >> 8) & 0xFF) + "." + ((i >> 16) & 0xFF) + "." + (i >> 24 & 0xFF);
     }
 
+    /**
+     * 秒转时间
+     * 60s
+     * 01：00
+     *
+     * **/
+    public static String formateTime(int sec){
+        if(sec <0) return "参数错误";
+        String time="";
+        int i = sec / 60;
+        if(i<=9) time = 0+""+i+":";
+        else time = i+":";
+        int s = sec - i*60;
+        if(s<=9) time += "0"+s;
+        else time +=s;
+        return time;
+    }
+
+
 }

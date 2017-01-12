@@ -12,7 +12,7 @@ import java.net.SocketException;
 
 public class UDPSendClient {
 
-    private int mPort = 22223;
+    private int mPort = Config.SERVER_PORT;
     private String mServerIp;
     private byte[] mByte= new byte[512];
     private DatagramSocket mSocket;

@@ -13,7 +13,7 @@ public class UDPReciever {
 
     private DatagramPacket mDatagramPacket;
     private DatagramSocket mDatagramSocket;
-    private final int mPort = 22223;
+    private final int mPort = Config.SERVER_PORT;
     private byte[] mByte = new byte[512];
     private ServerCallBack mCallBack;
 

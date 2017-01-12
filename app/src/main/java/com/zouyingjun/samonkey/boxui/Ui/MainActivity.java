@@ -1,19 +1,24 @@
 package com.zouyingjun.samonkey.boxui.Ui;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zouyingjun.samonkey.boxui.R;
+import com.zouyingjun.samonkey.boxui.adapter.GuideAdapter;
 import com.zouyingjun.samonkey.boxui.dialog.Mydialog;
 import com.zouyingjun.samonkey.boxui.entity.UDPReciever;
 import com.zouyingjun.samonkey.boxui.entity.UDPSendClient;
@@ -26,12 +31,15 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends BaseActivity {
     //ui
-    private FrameLayout fmRightScroll, fmRightFlick, fmRightView, fmLeft;
-    private LinearLayout llCenter,llVolmue,llVideo;
-    private TextView tvStatus,tvVideo1,tvVideo2;
+    private FrameLayout fmRightScroll, fmRightFlick, fmRightView, fmLeft, fmVp;
+    private LinearLayout llCenter, llVolmue, llVideo;
+    private TextView tvStatus, tvVideo1, tvVideo2, tvVpTitle;
     private VerticalSeekBar verticalSeekBar;
     private SeekBar seekBar;
-    private Button btBack,btNext,btPre,btStop,btGuide,btVolume;
+    private Button btBack, btNext, btPre, btStop, btGuide, btVolume;
+    private ViewPager mVp;
+    private GuideAdapter mAdapter;
+    private RadioGroup rg;
     //广播
     private UDPReciever reciever;
     private UDPSendClient client;
@@ -66,15 +74,17 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView() {
         super.initView();
+        rg = (RadioGroup) findViewById(R.id.rg_main_indicatorId);
         btBack = (Button) findViewById(R.id.bt_back);
         btNext = (Button) findViewById(R.id.bt_next);
         btStop = (Button) findViewById(R.id.bt_stop);
         btPre = (Button) findViewById(R.id.bt_pre);
         btGuide = (Button) findViewById(R.id.bt_guide);
-        btVolume = (Button) findViewById(R.id.bt_volume);
+        btVolume = (Button) findViewById(R.id.bt_control);
         tvStatus = (TextView) findViewById(R.id.tv_main_status);
         tvVideo1 = (TextView) findViewById(R.id.tv_scroll_vidoe1);
         tvVideo2 = (TextView) findViewById(R.id.tv_scroll_vidoe2);
+        tvVpTitle = (TextView) findViewById(R.id.tv_vp_guide);
         llCenter = (LinearLayout) findViewById(R.id.ll_gesture_center);
         llVolmue = (LinearLayout) findViewById(R.id.ll_scroll_volmue);
         llVideo = (LinearLayout) findViewById(R.id.ll_scroll_vidoe);
@@ -82,11 +92,42 @@ public class MainActivity extends BaseActivity {
         fmRightView = (FrameLayout) findViewById(R.id.fl_gestrue_right1);
         fmRightFlick = (FrameLayout) findViewById(R.id.fl_gestrue_right2);
         fmLeft = (FrameLayout) findViewById(R.id.fl_gestrue_left);
+        fmVp = (FrameLayout) findViewById(R.id.fl_main_vp);
         seekBar = (SeekBar) findViewById(R.id.sb_scroll_vidoe);
+        mVp = (ViewPager) findViewById(R.id.vp_main_guide);
+        mAdapter = new GuideAdapter(this);
+        mVp.setAdapter(mAdapter);
+
+        mVp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if(positionOffset == 0){
+                    tvVpTitle.setVisibility(View.VISIBLE);
+                    setVpTitle(position);
+                }else{
+                    if(tvVpTitle.getVisibility()==View.VISIBLE) {
+                        tvVpTitle.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.text_out));
+                        tvVpTitle.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                ((RadioButton)rg
+                        .getChildAt(position))
+                        .setChecked(true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int current = 0;
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                current = progress;toastStr("当前值:" + progress);
             }
 
             @Override
@@ -96,24 +137,37 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                cachedThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        client.sendMessage(3042 + "," + current);
+                    }
+                });
             }
         });
         verticalSeekBar = (VerticalSeekBar) findViewById(R.id.vs_scroll_volmue);
-        verticalSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        verticalSeekBar.setThumb(getResources().getDrawable(R.drawable.circle_vol));
+        verticalSeekBar.setOnSeekBarChangeListener(new VerticalSeekBar.OnSeekBarChangeListener() {
+            int currentProgress = 0;
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                toastStr("当前值:" + progress);
+            public void onProgressChanged(VerticalSeekBar VerticalSeekBar, int progress, boolean fromUser) {
+                currentProgress = progress;
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+            public void onStartTrackingTouch(VerticalSeekBar VerticalSeekBar) {
 
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
+            public void onStopTrackingTouch(VerticalSeekBar VerticalSeekBar) {
+                toastStr("当前值:" + currentProgress);
+                cachedThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        client.sendMessage(3052 + "," + currentProgress/10f);
+                    }
+                });
             }
         });
 
@@ -133,11 +187,72 @@ public class MainActivity extends BaseActivity {
                 cachedThreadPool.execute(new Runnable() {
                     @Override
                     public void run() {
-                        client.sendMessage(4001 + "," + Utils.getWifiIp(MainActivity.this));
+
+                        try {
+                            for (int i = 0; i < 10; i++) {
+                                if (SERVER_IP.equals("255.255.255.255"))
+                                    client.sendMessage(4001 + "," + Utils.getWifiIp(MainActivity.this));
+                                else break;
+                                Thread.sleep(500);
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    myDialog.dismiss();
+                                    if (SERVER_IP.equals("255.255.255.255")) {
+                                        mDialog.show(Mydialog.TEXT_BUTTON_DIALOG);
+                                    }
+                                }
+                            });
+
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }
         });
+        setGuideIndicator();
+    }
+
+    public void setGuideIndicator(){
+        RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
+                RadioGroup.LayoutParams.WRAP_CONTENT,
+                RadioGroup.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(10, 0, 10, 0);
+        for(int i=0;i<4;i++){
+            RadioButton rBtn=new RadioButton(this);
+            rBtn.setButtonDrawable(R.drawable.selector_vp);
+            rBtn.setLayoutParams(params);
+            rg.addView(rBtn);
+        }
+        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rBtn=(RadioButton)
+                        group.findViewById(checkedId);
+                int pos=
+                        rg.indexOfChild(rBtn);
+                mVp.setCurrentItem(pos);
+            }
+        });
+        ((RadioButton)rg
+                .getChildAt(0))
+                .setChecked(true);
+    }
+
+
+    private void setVpTitle(int position) {
+        String[] tils = {
+                "光标移动使用指南",
+                "全景视频使用指南",
+                "全景图片使用指南",
+                "游戏使用指南"
+        };
+        tvVpTitle.setText(tils[position]);
+        tvVpTitle.startAnimation(AnimationUtils.loadAnimation(this, R.anim.text_in));
     }
 
     int widthPixels, heightPixels;
@@ -202,9 +317,9 @@ public class MainActivity extends BaseActivity {
                 //回调时间点
                 final long time = System.currentTimeMillis();
 
-                if(mDistanceX == 0&& mDistanceY == 0){
-                    mDistanceX = (int) Math.round(distanceX*0.7);
-                    mDistanceY = (int) Math.round(distanceY*0.7);
+                if (mDistanceX == 0 && mDistanceY == 0) {
+                    mDistanceX = (int) Math.round(distanceX * 0.5);
+                    mDistanceY = (int) Math.round(distanceY * 0.5);
 
                 }
                 if (time - mLastMillis > 10) {
@@ -234,8 +349,8 @@ public class MainActivity extends BaseActivity {
                     mDistanceX = 0;
                     mDistanceY = 0;
                 } else {
-                    mDistanceX += (int)Math.round(distanceX*0.7);
-                    mDistanceY += (int)Math.round(distanceY*0.7);
+                    mDistanceX += (int) Math.round(distanceX * 0.5);
+                    mDistanceY += (int) Math.round(distanceY * 0.5);
                 }
 
 
@@ -287,9 +402,9 @@ public class MainActivity extends BaseActivity {
                 //回调时间点
                 final long time = System.currentTimeMillis();
 
-                if(mDistanceX == 0&& mDistanceY == 0){
-                    mDistanceX = (int)Math.round(distanceX*0.7);
-                    mDistanceY = (int)Math.round(distanceY*0.7);
+                if (mDistanceX == 0 && mDistanceY == 0) {
+                    mDistanceX = (int) Math.round(distanceX * 0.5);
+                    mDistanceY = (int) Math.round(distanceY * 0.5);
                 }
 
                 if (time - mLastMillis > 10) {
@@ -319,8 +434,8 @@ public class MainActivity extends BaseActivity {
                     mDistanceX = 0;
                     mDistanceY = 0;
                 } else {
-                    mDistanceX += (int)Math.round(distanceX*0.7);
-                    mDistanceY += (int)Math.round(distanceY*0.7);
+                    mDistanceX += (int) Math.round(distanceX * 0.5);
+                    mDistanceY += (int) Math.round(distanceY * 0.5);
                 }
                 return super.onScroll(e1, e2, distanceX, distanceY);
             }
@@ -349,9 +464,10 @@ public class MainActivity extends BaseActivity {
     }
 
 
+
     public void onClick(View v) {
         int id = v.getId();
-        switch (id){
+        switch (id) {
             case R.id.bt_back:
                 cachedThreadPool.execute(new Runnable() {
                     @Override
@@ -361,20 +477,56 @@ public class MainActivity extends BaseActivity {
                 });
                 break;
             case R.id.bt_next:
+                cachedThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        client.sendMessage("" + 3062);
+                    }
+                });
                 break;
-            case R.id.bt_volume:
-                if(llVolmue.getVisibility()==View.VISIBLE){
-                    llVolmue.setVisibility(View.GONE);
-                }else{
-                    llVolmue.setVisibility(View.VISIBLE);
+            case R.id.bt_stop:
+                cachedThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        client.sendMessage("" + 3060);
+                    }
+                });
+                break;
+            case R.id.bt_pre:
+                cachedThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        client.sendMessage("" + 3061);
+                    }
+                });
+                break;
+            case R.id.iv_vp_closed:
+            case R.id.bt_guide:
+                if (fmVp.getVisibility() == View.VISIBLE) {
+                    fmVp.setVisibility(View.GONE);
+                } else {
+                    mVp.setCurrentItem(0,false);
+                    fmVp.setVisibility(View.VISIBLE);
                 }
+                break;
+            case R.id.bt_control:
+                if (llVolmue.getVisibility() == View.VISIBLE) {
+                    llVolmue.setVisibility(View.GONE);
+                    llVideo.setVisibility(View.GONE);
+                } else {
+                    llVolmue.setVisibility(View.VISIBLE);
+                    llVideo.setVisibility(View.VISIBLE);
+                }
+                break;
+            case R.id.tv_main_status:
+                changeGestureMode(GESTURE_MODE_SCROLL);
                 break;
         }
     }
 
     private void changeGestureMode(int gestureCode) {
 
-        if(mDialog!=null){
+        if (mDialog != null) {
             mDialog.dismiss();
         }
 
@@ -427,7 +579,8 @@ public class MainActivity extends BaseActivity {
         }
         GESTURE_MODE = gestureCode;
         if (SERVER_IP.equals("255.255.255.255") && mDialog != null) {
-            tvStatus.setText("未连接");SERVER_IP = "255.255.255.255";
+            tvStatus.setText("未连接");
+            SERVER_IP = "255.255.255.255";
             cachedThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -440,13 +593,6 @@ public class MainActivity extends BaseActivity {
                                     mDialog.show(Mydialog.TEXT_BUTTON_DIALOG);
                                 }
                             });
-                        }else{
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    myDialog.dismiss();
-                                }
-                            });
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -454,7 +600,7 @@ public class MainActivity extends BaseActivity {
                 }
             });
 
-        }else{
+        } else {
             tvStatus.setText("已连接");
         }
     }
@@ -488,32 +634,64 @@ public class MainActivity extends BaseActivity {
      * 3011 光标
      * 3012 手势—视频—滑动
      * 3013 手势-游戏-点击
-     * 3014
+     * 3014 宜居 双模式
+     *
+     *
+     * next 3062
+     * pre 3061
+     * pause 3060
+     * pro 3042
+     * volume 3052
+
+     * progress 3040
+     * volem 3051(0.5 10)
+     * currnet 3041
      */
+
     public void handlerReciever(final String data) {
         Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
         String sub = data.split(",")[0];
-        if (sub != null && sub.equals("4000")) {
-            cachedThreadPool.execute(new Runnable() {
-                @Override
-                public void run() {
-                    client.destroyClient();
-                    client = new UDPSendClient(data.split(",")[1]);
-                }
-            });
-            SERVER_IP = data.split(",")[1];
-            tvStatus.setText("已连接");
+        if (sub != null) {
+            if (sub.equals("4000")) {
+                cachedThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        client.destroyClient();
+                        client = new UDPSendClient(data.split(",")[1]);
+                    }
+                });
+                Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
+                SERVER_IP = data.split(",")[1];
+                String volume = data.split(",")[2];
+                if(volume!=null) verticalSeekBar.setProgress((int)(Float.parseFloat(volume)*10));
+                tvStatus.setText("已连接");
+//                Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
+            }else if (sub.equals("3051")) {
+//                Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
+                verticalSeekBar.setProgress((int) (Float.parseFloat(data.split(",")[1])*10));
+            }else if(sub.equals("3040")) {
+                int postime = Integer.parseInt(data.split(",")[1]);
+                seekBar.setMax(postime);
+                tvVideo2.setText(Utils.formateTime(postime));
+            }else if(sub.equals("3041")){
+                int currentTime = Integer.parseInt(data.split(",")[1]);
+                seekBar.setProgress(currentTime);
+                tvVideo1.setText(Utils.formateTime(currentTime));
         } else {
+                Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
             if ("3011".equals(data)) changeGestureMode(GESTURE_MODE_CURSOR);
             else if ("3012".equals(data)) changeGestureMode(GESTURE_MODE_SCROLL);
             else if ("3013".equals(data)) changeGestureMode(GESTURE_MODE_FLICK);
             else if ("3014".equals(data)) changeGestureMode(GESTURE_MODE_DOUBLE);
             else if ("3100".equals(data)) {
-                tvStatus.setText("未连接");SERVER_IP = "255.255.255.255";
+                tvStatus.setText("未连接");
+                SERVER_IP = "255.255.255.255";
                 this.mDialog.show(Mydialog.TEXT_BUTTON_DIALOG);
             }
         }
     }
+}
+
 
     @Override
     protected void onDestroy() {

@@ -1,0 +1,50 @@
+package com.zouyingjun.samonkey.boxui.adapter;
+
+import android.content.Context;
+import android.support.v4.view.PagerAdapter;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.zouyingjun.samonkey.boxui.R;
+
+/**
+ * Created by Tony J on 2017/1/11.
+ */
+
+public class GuideAdapter extends PagerAdapter {
+
+    int[] imgs = {
+            R.drawable.choose,R.drawable.fullview,
+            R.drawable.fullviewpic,R.drawable.game
+    };
+    Context context;
+    public GuideAdapter (Context contenxt){
+        this.context = contenxt;
+    }
+
+
+    @Override
+    public int getCount() {
+        return imgs.length;
+    }
+
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return view == object;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        container.removeView((View) object);
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        ImageView iv = (ImageView) LayoutInflater.from(context).inflate(R.layout.item_vp_guide,container,false);
+        iv.setImageResource(imgs[position]);
+        container.addView(iv);
+        return iv;
+    }
+}

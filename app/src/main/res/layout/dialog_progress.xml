@@ -23,7 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:textColor="#fff"
-        android:text="正在加载"
-        android:textSize="14dp" 
+        android:text="连接中..."
+        android:textSize="16dp"
         />
+
 </LinearLayout>

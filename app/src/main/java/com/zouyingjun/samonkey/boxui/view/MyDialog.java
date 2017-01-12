@@ -2,8 +2,6 @@ package com.zouyingjun.samonkey.boxui.view;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.text.TextUtils;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -37,13 +35,13 @@ public class MyDialog extends Dialog {
         setCanceledOnTouchOutside(false);
         this.setContentView(R.layout.dialog_progress);
         mMessage = (TextView) findViewById(R.id.tvLoad);
-        setShowMessage(message);
+//        setShowMessage(message);
     }
 
     protected MyDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
     }
-    public void setShowMessage(String msg)
+   /* public void setShowMessage(String msg)
     {
         if (!TextUtils.isEmpty(msg))
         {
@@ -54,5 +52,5 @@ public class MyDialog extends Dialog {
         {
             mMessage.setVisibility(View.GONE);
         }
-    }
+    }*/
 }

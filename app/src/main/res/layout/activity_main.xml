@@ -16,13 +16,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
+
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="56dp"
+                android:layout_marginTop="66dp"
                 android:src="@drawable/ic_labe" />
         </FrameLayout>
 
@@ -48,89 +49,97 @@
         </LinearLayout>
 
         <FrameLayout
+            android:id="@+id/fl_gestrue_right1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/fl_gestrue_right1"
             android:layout_weight="1">
+
             <FrameLayout
                 android:id="@+id/fl_gestrue_right"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <LinearLayout
+                    android:id="@+id/ll_scroll_volmue"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="60dp"
-                    android:visibility="gone"
                     android:layout_gravity="right|center"
-                    android:id="@+id/ll_scroll_volmue"
-                    android:layout_marginRight="30dp"
                     android:layout_marginBottom="50dp"
-                    android:orientation="vertical">
-                <com.zouyingjun.samonkey.boxui.view.VerticalSeekBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:minHeight="5dp"
-                    android:maxHeight="5dp"
-                    android:thumbOffset="5dp"
-                    android:id="@+id/vs_scroll_volmue"
-                    android:max="100"
-                    android:progressDrawable="@drawable/seekbar_style"
-                    android:thumb="@drawable/circle_vol"/>
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="60dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <com.zouyingjun.samonkey.boxui.view.VerticalSeekBar
+                        android:id="@+id/vs_scroll_volmue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:max="10"
+                        android:maxHeight="5dp"
+                        android:minHeight="5dp"
+                        android:progressDrawable="@drawable/seekbar_style" />
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/volmue"/>
+                        android:src="@drawable/volmue" />
                 </LinearLayout>
+
                 <LinearLayout
+                    android:id="@+id/ll_scroll_vidoe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="5dp"
-                    android:visibility="gone"
-                    android:paddingBottom="5dp"
-                    android:id="@+id/ll_scroll_vidoe"
-                    android:paddingRight="10dp"
                     android:background="#991c242a"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:visibility="gone">
+
                     <TextView
+                        android:id="@+id/tv_scroll_vidoe1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="00:00"
-                        android:id="@+id/tv_scroll_vidoe1"
-                        android:layout_marginLeft="10dp"/>
+                        android:layout_marginLeft="10dp"
+                        android:text="00:00" />
+
                     <SeekBar
+                        android:id="@+id/sb_scroll_vidoe"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:minHeight="5dp"
-                        android:maxHeight="5dp"
-                        android:thumbOffset="5dp"
                         android:layout_gravity="center_vertical"
-                        android:id="@+id/sb_scroll_vidoe"
+                        android:layout_weight="1"
+                        android:maxHeight="5dp"
+                        android:minHeight="5dp"
                         android:progressDrawable="@drawable/seekbar_style"
-                        android:thumb="@drawable/lignt_down"/>
+                        android:thumb="@drawable/lignt_down"
+                        android:thumbOffset="5dp" />
+
                     <TextView
+                        android:id="@+id/tv_scroll_vidoe2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="00:00"
-                        android:id="@+id/tv_scroll_vidoe2"
-                        android:layout_marginRight="10dp"/>
+                        android:layout_marginRight="10dp"
+                        android:text="00:00" />
                 </LinearLayout>
             </FrameLayout>
+
             <FrameLayout
                 android:id="@+id/fl_gestrue_right2"
-                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/imageView3"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="66dp"
+                android:layout_marginTop="76dp"
                 android:src="@drawable/ic_gesture" />
         </FrameLayout>
     </LinearLayout>
@@ -138,91 +147,97 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="42dp"
         android:orientation="horizontal">
+
         <Button
-            android:layout_width="50dp"
-            android:layout_height="20dp"
-            android:text="返回"
-            android:gravity="center"
-            android:textSize="10sp"
-            android:onClick="onClick"
             android:id="@+id/bt_back"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/btn_bg"
-            android:textColor="@drawable/btn_color"/>
-        <Button
-            android:layout_width="50dp"
-            android:layout_height="20dp"
-            android:text="上一个"
             android:gravity="center"
-            android:visibility="gone"
             android:onClick="onClick"
-            android:textSize="10sp"
+            android:text="返回"
+            android:textColor="@drawable/btn_color"
+            android:textSize="10sp" />
+
+        <Button
             android:id="@+id/bt_pre"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/btn_bg"
-            android:textColor="@drawable/btn_color"/>
-        <Button
-            android:layout_width="50dp"
-            android:layout_height="20dp"
-            android:text="暂停"
             android:gravity="center"
-            android:textSize="10sp"
-            android:visibility="gone"
             android:onClick="onClick"
+            android:text="上一个"
+            android:textColor="@drawable/btn_color"
+            android:textSize="10sp"
+            android:visibility="gone" />
+
+        <Button
             android:id="@+id/bt_stop"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/btn_bg"
-            android:textColor="@drawable/btn_color"/>
-        <Button
             android:layout_width="50dp"
             android:layout_height="20dp"
-            android:text="下一个"
-            android:gravity="center"
-            android:textSize="10sp"
-            android:visibility="gone"
-            android:id="@+id/bt_next"
-            android:onClick="onClick"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/btn_bg"
-            android:textColor="@drawable/btn_color"/>
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="暂停"
+            android:textColor="@drawable/btn_color"
+            android:textSize="10sp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/bt_next"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/btn_bg"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="下一个"
+            android:textColor="@drawable/btn_color"
+            android:textSize="10sp"
+            android:visibility="gone" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"></View>
 
         <Button
-            android:layout_width="50dp"
-            android:layout_height="20dp"
-            android:text="引导"
-            android:gravity="center"
-            android:textSize="10sp"
             android:id="@+id/bt_guide"
-            android:layout_marginLeft="5dp"
-            android:onClick="onClick"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/btn_bg"
-            android:textColor="@drawable/btn_color"/>
-        <Button
             android:layout_width="50dp"
             android:layout_height="20dp"
-            android:text="音量"
-            android:gravity="center"
-            android:textSize="10sp"
-            android:visibility="gone"
-            android:id="@+id/bt_volume"
-            android:onClick="onClick"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/btn_bg"
-            android:textColor="@drawable/btn_color"/>
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="引导"
+            android:textColor="@drawable/btn_color"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/bt_control"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/btn_bg"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="控制"
+            android:textColor="@drawable/btn_color"
+            android:textSize="10sp"
+            android:visibility="gone" />
     </LinearLayout>
 
 
@@ -233,7 +248,51 @@
         android:layout_gravity="right"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:onClick="onClick"
         android:text="未连接"
         android:textColor="#FFF"
         android:textSize="12sp" />
+
+    <FrameLayout
+        android:id="@+id/fl_main_vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_main_guide"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/tv_vp_guide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:text="光标移动使用指南"
+            android:textColor="#FFF"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/iv_vp_closed"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="right"
+            android:layout_margin="10dp"
+            android:onClick="onClick"
+            android:scaleType="fitXY"
+            android:src="@drawable/closed" />
+
+        <RadioGroup
+            android:id="@+id/rg_main_indicatorId"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal" />
+    </FrameLayout>
 </FrameLayout>
